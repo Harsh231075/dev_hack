@@ -1,5 +1,5 @@
 import prisma from "../config/prismaClient.js";
-import redis from "../config/redisClient.js";
+import { redisPub, redisCache } from "../config/redisClient.js";
 import { analyzeSentiment } from "../utils/sentimentAnalysis.js";
 
 export const submitFeedback = async (req, res) => {
@@ -15,7 +15,7 @@ export const submitFeedback = async (req, res) => {
     });
 
     // Publish feedback update
-    redis.publish("feedback_channel", JSON.stringify(feedback));
+    redisPub.publish("feedback_channel", JSON.stringify(feedback));
 
     res.status(201).json(feedback);
   } catch (error) {
@@ -25,11 +25,14 @@ export const submitFeedback = async (req, res) => {
 };
 
 export const getFeedback = async (req, res) => {
+  if (!req.user) {
+    throw new ApiError(401, "Unauthorized access. Token missing.");
+  }
   const { eventId } = req.params;
 
   try {
     const cacheKey = `feedback:${eventId}`;
-    const cachedData = await redis.get(cacheKey);
+    const cachedData = await redisCache.get(cacheKey);
 
     if (cachedData) {
       return res.json(JSON.parse(cachedData));
@@ -40,7 +43,7 @@ export const getFeedback = async (req, res) => {
       orderBy: { createdAt: "desc" },
     });
 
-    await redis.setex(cacheKey, 60, JSON.stringify(feedback));
+    await redisCache.setex(cacheKey, 60, JSON.stringify(feedback));
 
     res.json(feedback);
   } catch (error) {

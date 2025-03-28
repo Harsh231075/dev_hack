@@ -4,7 +4,7 @@ import { getEnv } from "./utils/getEnv.js";
 import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
-import redis from "./config/redisClient.js";
+import { redisPub, redisSub } from "./config/redisClient.js";
 
 
 const server = http.createServer(app);
@@ -18,7 +18,7 @@ io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   socket.on("send_feedback", (data) => {
-    redis.publish("feedback_channel", JSON.stringify(data));
+    redisPub.publish("feedback_channel", JSON.stringify(data));
   });
 
   socket.on("disconnect", () => {
@@ -26,11 +26,11 @@ io.on("connection", (socket) => {
   });
 });
 
-redis.subscribe("feedback_channel", (err) => {
+redisSub.subscribe("feedback_channel", (err) => {
   if (err) console.error("Redis subscription failed:", err);
 });
 
-redis.on("message", (channel, message) => {
+redisSub.on("message", (channel, message) => {
   if (channel === "feedback_channel") {
     io.emit("new_feedback", JSON.parse(message));
   }

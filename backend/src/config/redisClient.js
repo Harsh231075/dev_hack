@@ -1,6 +1,8 @@
 import Redis from "ioredis";
 import { getEnv } from "../utils/getEnv.js"
 
-const redis = new Redis(getEnv("REDIS_URL"));
+const redisPub = new Redis(getEnv("REDIS_URL"));  // For publishing messages
+const redisSub = new Redis(getEnv("REDIS_URL"));  // For subscribing
+const redisCache = new Redis(getEnv("REDIS_URL"));  // Cache client
 
-export default redis;
+export { redisPub, redisSub, redisCache };
