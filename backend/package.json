@@ -16,6 +16,7 @@
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "geoip-lite": "^1.4.10",
     "ioredis": "^5.6.0",
     "jsonwebtoken": "^9.0.2",
     "prisma": "^6.5.0",

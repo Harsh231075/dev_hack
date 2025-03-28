@@ -33,6 +33,8 @@ model Feedback {
   score         Int
   comment       String
   sentimentScore Float
+  location      String?  // location of the user
+
   createdAt     DateTime @default(now())
   event         Event   @relation(fields: [eventId], references: [id])
 }

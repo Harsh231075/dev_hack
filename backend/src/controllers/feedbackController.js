@@ -1,17 +1,20 @@
 import prisma from "../config/prismaClient.js";
 import { redisPub, redisCache } from "../config/redisClient.js";
 import { analyzeSentiment } from "../utils/sentimentAnalysis.js";
+import { getUserIp } from "../utils/getUserIp.js";
+import geoip from "geoip-lite";
 
 export const submitFeedback = async (req, res) => {
   const { eventId, name, email, score, comment } = req.body;
 
   try {
     const sentimentScore = analyzeSentiment(comment);
-
-    console.log(sentimentScore);
+    const userIp = getUserIp(req);
+    const geo = geoip.lookup(userIp);
+    const location = geo ? (geo.city ?? geo.country) : null;
 
     const feedback = await prisma.feedback.create({
-      data: { eventId, name, email, score, comment, sentimentScore },
+      data: { eventId, name, email, score, comment, sentimentScore, location },
     });
 
     // Publish feedback update
