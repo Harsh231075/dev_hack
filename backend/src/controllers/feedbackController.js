@@ -13,14 +13,20 @@ export const submitFeedback = async (req, res) => {
     const geo = geoip.lookup(userIp);
     const location = geo ? (geo.city ?? geo.country) : null;
 
-    const feedback = await prisma.feedback.create({
-      data: { eventId, name, email, score, comment, sentimentScore, location },
-    });
-
-    // Publish feedback update
-    redisPub.publish("feedback_channel", JSON.stringify(feedback));
-
-    res.status(201).json(feedback);
+    if (location) {
+      const feedback = await prisma.feedback.create({
+        data: { eventId, name, email, score, comment, sentimentScore, location: location },
+      });
+      redisPub.publish("feedback_channel", JSON.stringify(feedback));
+      res.status(201).json(feedback);
+    } else {
+      const feedback = await prisma.feedback.create({
+        data: { eventId, name, email, score, comment, sentimentScore },
+      });
+      redisPub.publish("feedback_channel", JSON.stringify(feedback));
+      res.status(201).json(feedback);
+    }
+    res.status(201).json({});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
