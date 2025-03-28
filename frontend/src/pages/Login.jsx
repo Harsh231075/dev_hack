@@ -14,23 +14,11 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-
-      const data = await response.json();
-      // Handle successful login (e.g., store token, redirect)
-      console.log('Login successful:', data);
+      const response = await axios.post('/api/auth/signup', formData);
+      // Handle successful signup (e.g., store token, redirect)
+      console.log('Signup successful:', response.data);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Signup error:', error);
     } finally {
       setLoading(false);
     }

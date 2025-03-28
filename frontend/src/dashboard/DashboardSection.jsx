@@ -23,9 +23,8 @@ const DashboardSection = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/events');
-      const data = await response.json();
-      setEvents(data);
+      const response = await axios.get('/api/events');
+      setEvents(response.data);
     } catch (error) {
       console.error('Error fetching events:', error);
     } finally {
@@ -37,20 +36,8 @@ const DashboardSection = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetch('/api/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newEvent),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create event');
-      }
-
-      const data = await response.json();
-      setEvents([...events, data]);
+      const response = await axios.post('/api/events', newEvent);
+      setEvents([...events, response.data]);
       setIsCreateModalOpen(false);
       setNewEvent({ name: '', date: '', description: '', location: '', maxParticipants: '' });
     } catch (error) {
@@ -62,12 +49,9 @@ const DashboardSection = () => {
 
   const handleShare = async (eventId) => {
     try {
-      const response = await fetch(`/api/events/${eventId}/share`, {
-        method: 'POST',
-      });
-      const data = await response.json();
+      const response = await axios.post(`/api/events/${eventId}/share`);
       // Handle share link
-      console.log('Share link:', data.shareLink);
+      console.log('Share link:', response.data.shareLink);
     } catch (error) {
       console.error('Error sharing event:', error);
     }
@@ -75,10 +59,9 @@ const DashboardSection = () => {
 
   const handleViewFeedbacks = async (eventId) => {
     try {
-      const response = await fetch(`/api/events/${eventId}/feedbacks`);
-      const data = await response.json();
+      const response = await axios.get(`/api/events/${eventId}/feedbacks`);
       // Handle feedbacks data
-      console.log('Feedbacks:', data);
+      console.log('Feedbacks:', response.data);
     } catch (error) {
       console.error('Error fetching feedbacks:', error);
     }
