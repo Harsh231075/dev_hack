@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  name     String
+  role     Role
+  feedback Feedback[]
+}
+
+model Event {
+  id       String  @id @default(uuid())
+  name     String
+  date     DateTime
+  organizerId String
+  feedback Feedback[]
+}
+
+model Feedback {
+  id            String  @id @default(uuid())
+  eventId       String
+  userId        String
+  text          String
+  sentimentScore Float
+  createdAt     DateTime @default(now())
+  event         Event   @relation(fields: [eventId], references: [id])
+  user          User    @relation(fields: [userId], references: [id])
+}
+
+enum Role {
+  ORGANIZER
+  ATTENDEE
+}
