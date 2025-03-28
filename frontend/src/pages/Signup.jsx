@@ -1,6 +1,7 @@
 // Signup.jsx
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import API from '../utils/api';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -15,21 +16,9 @@ const Signup = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Signup failed');
-      }
-
-      const data = await response.json();
+      const response = await API.post('/api/auth/register', formData);
       // Handle successful signup (e.g., store token, redirect)
-      console.log('Signup successful:', data);
+      console.log('Signup successful:', response.data);
     } catch (error) {
       console.error('Signup error:', error);
     } finally {

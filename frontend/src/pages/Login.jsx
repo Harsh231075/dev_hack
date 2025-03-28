@@ -1,6 +1,7 @@
 // Login.jsx
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import API from '../utils/api';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -14,9 +15,10 @@ const Login = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await axios.post('/api/auth/signup', formData);
+      const response = await API.post('/api/auth/login', formData);
       // Handle successful signup (e.g., store token, redirect)
-      console.log('Signup successful:', response.data);
+      console.log('login successful:', response.data);
+      localStorage.setItem('authToken', response.data.token);
     } catch (error) {
       console.error('Signup error:', error);
     } finally {

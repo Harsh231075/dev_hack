@@ -4,6 +4,7 @@ import Dashboard from './dashboard/Dashboard';
 import Feedback from './components/FeedbackForm'; // Ensure the file path is correct
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Share from './pages/Share';
 function App() {
   return (
     <Routes>
@@ -11,6 +12,7 @@ function App() {
       <Route path="/feedback" element={<Feedback />} />
       <Route path='/login' element={<Login />} />
       <Route path='/signup' element={<Signup />} />
+      <Route path='/share/:eventId' element={<Share />} />
     </Routes>
   );
 }
