@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { Star } from 'lucide-react';
-
+import { useParams } from "react-router-dom";
+import API from '../utils/api';
 const FeedbackForm = () => {
+  const { eventId } = useParams();
+  console.log(eventId);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    rating: 0,
-    message: ''
+    score: 0,
+    comment: '',
+    eventId: eventId,
   });
   const [hoveredRating, setHoveredRating] = useState(0);
 
@@ -19,8 +23,14 @@ const FeedbackForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // API call will go here
-    console.log('Feedback submitted:', formData);
+    try {
+      const response = await API.post('/api/feedback', formData);
+      console.log('Feedback submitted successfully:', response.data);
+      // Optional: Clear form or show success message
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      // Optional: Show error message to user
+    }
   };
 
   return (

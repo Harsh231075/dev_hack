@@ -3,6 +3,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { Share2, Copy, Check } from "lucide-react";
 import { useParams } from "react-router-dom";
 
+
 function QRCodeGenerator() {
   const [copied, setCopied] = useState(false);
   const [qrStyle, setQrStyle] = useState({
