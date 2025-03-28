@@ -160,15 +160,7 @@ const DashboardSection = () => {
                         {event.location}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex">
-                        <button
-                          onClick={() => {
-                            setSelectedEvent(event);
-                            setIsModalOpen(true);
-                          }}
-                          className="text-blue-600 hover:text-blue-800 mr-4"
-                        >
-                          <Eye className="h-5 w-5" />
-                        </button>
+
                         <Link
                           to={`/share/${event.id}`}
                           className="text-green-600 hover:text-green-800 "
@@ -179,7 +171,7 @@ const DashboardSection = () => {
                           to={`/live/${event.id}`}
                           className="text-green-600 hover:text-green-800 "
                         >
-                          <Share2 className="h-5 w-5" />
+                          <Eye className="h-5 w-5" />
                         </Link>
                       </td>
                     </tr>
