@@ -1,14 +1,11 @@
 import jwt from "jsonwebtoken";
-import ApiError from "../utils/ApiError";
+import ApiError from "../utils/apiError.js";
+import { getEnv } from "../utils/getEnv.js";
 
 // Middleware to check if the user is authenticated
-export const authMiddleware = (
-  req,
-  res,
-  next
-) => {
+export const authMiddleware = (req, res, next) => {
   const token = req.headers["authorization"]?.split(" ")[1]; // Assuming Bearer token format
-
+  console.log(token);
   if (!token) {
     next(new ApiError(401, "Unauthorized access. Token missing."));
     return;
