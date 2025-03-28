@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Eye, Share2, Calendar, Users, Activity, X } from 'lucide-react';
+import axios from 'axios'
+import API from '../utils/api';
+import { Link } from 'react-router-dom';
 
 const DashboardSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +26,7 @@ const DashboardSection = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/events');
+      const response = await API.get('/api/events');
       setEvents(response.data);
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -36,24 +39,17 @@ const DashboardSection = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await axios.post('/api/events', newEvent);
+      newEvent.date = new Date(newEvent.date);
+      const token = localStorage.getItem('authToken');
+      const response = await API.post('/api/events', newEvent);
+      console.log(response.data);
       setEvents([...events, response.data]);
       setIsCreateModalOpen(false);
-      setNewEvent({ name: '', date: '', description: '', location: '', maxParticipants: '' });
+      setNewEvent({ name: '', date: '', description: '', location: '' });
     } catch (error) {
       console.error('Error creating event:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleShare = async (eventId) => {
-    try {
-      const response = await axios.post(`/api/events/${eventId}/share`);
-      // Handle share link
-      console.log('Share link:', response.data.shareLink);
-    } catch (error) {
-      console.error('Error sharing event:', error);
     }
   };
 
@@ -134,9 +130,6 @@ const DashboardSection = () => {
                     Location
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Max Participants
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -166,10 +159,7 @@ const DashboardSection = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {event.location}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {event.maxParticipants}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex">
                         <button
                           onClick={() => {
                             setSelectedEvent(event);
@@ -179,12 +169,12 @@ const DashboardSection = () => {
                         >
                           <Eye className="h-5 w-5" />
                         </button>
-                        <button
-                          onClick={() => handleShare(event.id)}
-                          className="text-green-600 hover:text-green-800"
+                        <Link
+                          to={`/share/${event.id}`}
+                          className="text-green-600 hover:text-green-800 "
                         >
                           <Share2 className="h-5 w-5" />
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   ))
@@ -326,39 +316,36 @@ const DashboardSection = () => {
                 </button>
 
                 {/* Share URL Section */}
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    Feedback Form URL
+                    Admin Feedback URL
                   </label>
                   <div className="flex gap-2">
-                    <input
-                      type="text"
-                      readOnly
-                      value={`meta.web/feedback/${selectedEvent.id}`}
-                      className="flex-1 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 focus:outline-none"
-                    />
+                    <div className="flex-1 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 text-gray-500">
+                      {`meta.web/feedback/${selectedEvent.id}`}
+                    </div>
                     <button
                       onClick={() => {
-                        navigator.clipboard.writeText(`meta.web/feedback/${selectedEvent.id}`);
+                        navigator.clipboard.writeText(`API/feedback/${selectedEvent.id}`);
                         setCopied(true);
                         setTimeout(() => setCopied(false), 2000);
                       }}
-                      className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg flex items-center gap-2 transition-colors"
+                      className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg flex items-center gap-2 transition-colors"
                     >
                       {copied ? (
                         <>
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span className="text-green-600">Copied!</span>
+                          <Check className="h-4 w-4" />
+                          <span>Copied!</span>
                         </>
                       ) : (
                         <>
                           <Copy className="h-4 w-4" />
-                          <span>Copy</span>
+                          <span>Copy URL</span>
                         </>
                       )}
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
