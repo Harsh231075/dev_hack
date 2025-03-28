@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import API from '../utils/api';
-
+import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -10,6 +10,8 @@ const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const naviagte = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +21,7 @@ const Login = () => {
       // Handle successful signup (e.g., store token, redirect)
       console.log('login successful:', response.data);
       localStorage.setItem('authToken', response.data.token);
+      naviagte('/dashboard')
     } catch (error) {
       console.error('Signup error:', error);
     } finally {

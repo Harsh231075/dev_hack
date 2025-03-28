@@ -1,8 +1,8 @@
 // src/home/Main.jsx
 import React from 'react';
 import Navbar from './Navbar';
-import HeroSection from './HeroSection';
-import FeaturesSection from './FeaturesSection';
+import HeroSection from './Hero';
+import FeaturesSection from './Feature';
 import Footer from './Footer';
 
 const Main = () => {

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Star, RefreshCcw, Search } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 
 const LiveFeedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const { eventId } = useParams();
 
   // Fetch feedbacks
   const fetchFeedbacks = async () => {
     try {
       setLoading(true);
       // Replace with your API endpoint
-      const response = await fetch('/api/feedbacks');
+      const response = await fetch(`/api/feedback/${eventId}`);
       const data = await response.json();
       setFeedbacks(data);
     } catch (error) {
