@@ -175,6 +175,12 @@ const DashboardSection = () => {
                         >
                           <Share2 className="h-5 w-5" />
                         </Link>
+                        <Link
+                          to={`/live/${event.id}`}
+                          className="text-green-600 hover:text-green-800 "
+                        >
+                          <Share2 className="h-5 w-5" />
+                        </Link>
                       </td>
                     </tr>
                   ))
