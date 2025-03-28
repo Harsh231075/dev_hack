@@ -1,11 +1,11 @@
-import prisma from "../prismaClient.js";
+import prisma from "../config/prismaClient.js";
 
 export const createEvent = async (req, res) => {
   try {
-    const { name, date, organizerId } = req.body;
+    const { name, date, description, location, organizerId } = req.body;
 
     const event = await prisma.event.create({
-      data: { name, date, organizerId },
+      data: { name, date, description, location, organizerId },
     });
 
     res.status(201).json({ message: "Event created", event });

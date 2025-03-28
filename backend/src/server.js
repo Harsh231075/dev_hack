@@ -1,11 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
+import { getEnv } from "./utils/getEnv.js";
 import http from "http";
 import { Server } from "socket.io";
 import app from "./app.js";
 import redis from "./config/redisClient.js";
-import { getEnv } from "./utils/getEnv.js";
-import dotenv from "dotenv";
 
-dotenv.config();
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -36,4 +36,4 @@ redis.on("message", (channel, message) => {
   }
 });
 
-server.listen(getEnv("PORT"), () => console.log("Server running on port 5000"));
+server.listen(getEnv("PORT"), () => console.log(`Server running on port ${getEnv("PORT")}`));

@@ -3,13 +3,15 @@ import redis from "../config/redisClient.js";
 import { analyzeSentiment } from "../utils/sentimentAnalysis.js";
 
 export const submitFeedback = async (req, res) => {
-  const { eventId, userId, text } = req.body;
+  const { eventId, name, email, score, comment } = req.body;
 
   try {
-    const sentimentScore = analyzeSentiment(text);
+    const sentimentScore = analyzeSentiment(comment);
+
+    console.log(sentimentScore);
 
     const feedback = await prisma.feedback.create({
-      data: { eventId, userId, text, sentimentScore },
+      data: { eventId, name, email, score, comment, sentimentScore },
     });
 
     // Publish feedback update

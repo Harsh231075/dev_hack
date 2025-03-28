@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 export const getEnv = (key, defaultValue = "") => {
   const value = process.env[key];
   if (value === undefined) {
